@@ -1,0 +1,6 @@
+config.py
+__pycache__/
+playground.ipynb
+input/*
+output/*
+.DS_Store
