@@ -1,4 +1,6 @@
-httpx
-pandas
-numpy
 aiolimiter
+asyncio
+boto3
+httpx
+numpy
+pandas
