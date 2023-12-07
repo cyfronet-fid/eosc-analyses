@@ -3,7 +3,7 @@ from typing import Optional
 from pydantic import BaseModel, Field
 
 
-class Cointainer(BaseModel):
+class Container(BaseModel):
     name: Optional[str] = Field(None, description='Name of the journal or conference.')
     issnPrinted: Optional[str] = Field(None, description='The journal printed issn.')
     issnOnline: Optional[str] = Field(None, description='The journal online issn.')
