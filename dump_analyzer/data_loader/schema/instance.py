@@ -61,6 +61,10 @@ class Instance(BaseModel):
         None,
         description="Information about the source from which the records has been collected.",
     )
+    eoscDsId: Optional[List[Pid]] = Field(
+        None,
+        description="Eosc data source ID.",
+    )
     fulltext: Optional[str] = Field(
         None,
         description="The direct link to the full-text as collected from the data source.",

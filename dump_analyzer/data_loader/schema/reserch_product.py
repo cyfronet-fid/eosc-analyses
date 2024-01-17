@@ -11,13 +11,13 @@ from context import Context
 from country import Country
 from eosc_if import EoscIF
 from geolocation import GeoLocation
-from indicators import Indicator
+from indicator import Indicator
 from instance import Instance
 from language import Language
 from pid import Pid
-from projects import Project
+from project import Project
 from relation import Relation
-from subjects import Subject
+from subject import Subject
 
 
 class ResearchProduct(BaseModel):
@@ -81,7 +81,7 @@ class ResearchProduct(BaseModel):
         None,
         description="A brief description of the resource and the context in which the resource was created.",
     )
-    documentationurl: Optional[List[str]] = Field(
+    documentationUrl: Optional[List[str]] = Field(
         None,
         description="Only for results with type 'software': URL to the software documentation",
     )

@@ -31,3 +31,7 @@ class Relation(BaseModel):
         None,
         description="The node target in the relation.",
     )
+    targetType: Optional[str] = Field(
+        None,
+        description="Graph node type.",
+    )
