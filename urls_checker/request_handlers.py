@@ -12,11 +12,10 @@ ERROR_CODE_REQUEST_ERROR = 3
 # Configure logging
 logging.basicConfig(
     level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-    handlers=[
-        logging.FileHandler('logfile.log')
-    ]
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+    handlers=[logging.FileHandler("logfile.log")],
 )
+
 
 def handle_exception(url, e):
     """
@@ -29,7 +28,9 @@ def handle_exception(url, e):
     Returns:
         httpx.Response: A response with an appropriate error code.
     """
-    error_message = f"Error occurred for URL: {url}, Error: {type(e).__name__}, message {e}"
+    error_message = (
+        f"Error occurred for URL: {url}, Error: {type(e).__name__}, message {e}"
+    )
     logging.error(error_message)
     if isinstance(e, httpx.RequestError):
         return httpx.Response(status_code=ERROR_CODE_REQUEST_ERROR)
@@ -39,7 +40,8 @@ def handle_exception(url, e):
         return httpx.Response(status_code=ERROR_CODE_CONNECTION)
     else:
         return httpx.Response(status_code=ERROR_CODE_REQUEST_ERROR)
-    
+
+
 async def async_request_data(client, url, limiter, retry_count=3):
     """
     Asynchronously request data from a URL using an HTTP client.
@@ -55,10 +57,13 @@ async def async_request_data(client, url, limiter, retry_count=3):
     """
     async with limiter:
         try:
-            response = await client.get(url, follow_redirects=True, timeout=httpx.Timeout(30.0))
+            response = await client.get(
+                url, follow_redirects=True, timeout=httpx.Timeout(30.0)
+            )
             return response
         except (httpx.RequestError, httpx.TimeoutException, httpx.ConnectError) as e:
             return handle_exception(url, e)
+
 
 async def async_request_publisher_data(client, urls, limiter):
     """
