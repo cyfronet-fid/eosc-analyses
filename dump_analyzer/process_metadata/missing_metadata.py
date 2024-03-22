@@ -19,18 +19,26 @@ def analyze_missing_values(df, file) -> pd.DataFrame:
     missing_percentages = []
 
     for col in df.columns:
+
+        if 'one_level_data.parquet' in file:
+            id_col = "id"
+        else:
+            id_col = "rp_id"
+
         column_names.append(col)
 
-        total_count = len(df)
+        total_count = df[id_col].nunique()
         total_counts.append(total_count)
 
-        none_count = df[col].isna().sum()
+        none_count = df[id_col][df[col].isna()].nunique()
+        none_ids_set = set(df[id_col][df[col].isna()])
 
-        filtered_df = df[df[col].notna()]
+        filtered_df = df[~df[col].isna()]
 
-        len_zero_count = 0
-        if not pd.api.types.is_float_dtype(df[col].dtype) and not pd.api.types.is_integer_dtype(df[col].dtype):
-            len_zero_count = (filtered_df[col].apply(len) == 0).sum()
+        len_zero_count = filtered_df[id_col][
+            (filtered_df[col].apply(lambda x: len(x) if hasattr(x, '__len__') else 1) == 0) &
+            (~filtered_df[id_col].isin(none_ids_set))
+            ].nunique()
 
         missing_count = none_count + len_zero_count
         missing_counts.append(missing_count)
@@ -41,13 +49,41 @@ def analyze_missing_values(df, file) -> pd.DataFrame:
         missing_percentage = (missing_count / total_count) * 100
         missing_percentages.append(missing_percentage)
 
-    missing_data_df = pd.DataFrame({
-        'file_name': file,
-        'column_name': column_names,
-        'total_count': total_counts,
-        'existing_count': existing_counts,
-        'missing_count': missing_counts,
-        'missing_percentage': missing_percentages
-    })
+    missing_data_df = pd.DataFrame(
+        {
+            "file_name": file,
+            "column_name": column_names,
+            "total_count": total_counts,
+            "existing_count": existing_counts,
+            "missing_count": missing_counts,
+            "missing_percentage": missing_percentages,
+        }
+    )
 
     return missing_data_df
+
+
+def aggregate_missing_data(missing_data_df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Aggregates missing data information, excluding certain columns and recalculating percentages.
+
+    Args:
+        missing_data_df (pd.DataFrame): DataFrame containing missing data information for each file.
+
+    Returns:
+        pd.DataFrame: Aggregated missing data information.
+    """
+    excluded_columns = ['rp_id', 'rp_type', 'rp_language', 'rp_publisher']
+    filtered_df = missing_data_df[~missing_data_df['column_name'].isin(excluded_columns)]
+
+    aggregated_data = filtered_df.groupby('column_name').agg({
+        'total_count': 'sum',
+        'existing_count': 'sum',
+        'missing_count': 'sum'
+    }).reset_index()
+
+    aggregated_data['missing_percentage'] = (aggregated_data['missing_count'] / aggregated_data['total_count']) * 100
+
+    aggregated_data['file_name'] = 'aggregated'
+
+    return aggregated_data

@@ -1,16 +1,9 @@
-from enum import  Enum
+from enum import Enum
 from typing import List, Optional
 from pydantic import BaseModel, Field
 
-from cfhbkeyvalue import CfHbKeyValue
-from pid import Pid
-
-
-class OpenAccessRoute(Enum):
-    gold = 'gold'
-    green = 'green'
-    hybrid = 'hybrid'
-    bronze = 'bronze'
+from dump_analyzer.data_loader.schema.model_2024_01.cfhbkeyvalue import CfHbKeyValue
+from dump_analyzer.data_loader.schema.model_2024_01.pid import Pid
 
 
 class Accessright(BaseModel):
@@ -19,14 +12,14 @@ class Accessright(BaseModel):
         description="COAR access mode code: http://vocabularies.coar-repositories.org/documentation/access_rights/",
     )
     label: Optional[str] = Field(None, description="Label for the access mode.")
-    openAccessRoute: Optional[OpenAccessRoute] = Field(
+    openAccessRoute: Optional[str] = Field(
         None,
-        description="Indicates the OpenAccess status. Values are set according to the Unpaywall methodology."
+        description="Indicates the OpenAccess status. Values are set according to the Unpaywall methodology.",
     )
     scheme: Optional[str] = Field(
         None,
         description="Scheme of reference for access right code. Always set to COAR access rights vocabulary: "
-                    "http://vocabularies.coar-repositories.org/documentation/access_rights/"
+        "http://vocabularies.coar-repositories.org/documentation/access_rights/",
     )
 
 
@@ -55,13 +48,13 @@ class Instance(BaseModel):
     articleprocessingcharge: Optional[Articleprocessingcharge] = Field(
         None,
         description="The money spent to make this book or article available in Open Access. "
-                    "Source for this information is the OpenAPC initiative.",
+        "Source for this information is the OpenAPC initiative.",
     )
     collectedfrom: Optional[CfHbKeyValue] = Field(
         None,
         description="Information about the source from which the records has been collected.",
     )
-    eoscDsId: Optional[List[Pid]] = Field(
+    eoscDsId: Optional[List[str]] = Field(
         None,
         description="Eosc data source ID.",
     )
@@ -84,7 +77,7 @@ class Instance(BaseModel):
     pid: Optional[List[Pid]] = Field(
         None,
         description="The set of persistent identifiers associated to this instance that have been collected "
-                    "from an authority for the pid type (i.e. Crossref/Datacite for doi)."
+        "from an authority for the pid type (i.e. Crossref/Datacite for doi).",
     )
     publicationdate: Optional[str] = Field(
         None,
@@ -93,15 +86,15 @@ class Instance(BaseModel):
     refereed: Optional[str] = Field(
         None,
         description="If this instance has been peer-reviewed or not. Allowed values are peerReviewed, "
-                    "nonPeerReviewed, UNKNOWN (as defined in https://api.openaire.eu/vocabularies/dnet:review_levels)",
+        "nonPeerReviewed, UNKNOWN (as defined in https://api.openaire.eu/vocabularies/dnet:review_levels)",
     )
     type: Optional[str] = Field(
         None,
         description="The specific sub-type of this instance "
-                    "(see https://api.openaire.eu/vocabularies/dnet:result_typologies following the links)",
+        "(see https://api.openaire.eu/vocabularies/dnet:result_typologies following the links)",
     )
     url: Optional[List[str]] = Field(
         None,
         description="URLs to the instance. They may link to the actual full-text or to the landing page at the "
-                    "hosting source.",
+        "hosting source.",
     )

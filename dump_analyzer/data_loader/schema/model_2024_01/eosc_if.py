@@ -7,4 +7,3 @@ class EoscIF(BaseModel):
     label: Optional[str] = Field(None, description="EOSC label")
     semanticRelation: Optional[str] = Field(None, description="Semantic Relation")
     url: Optional[str] = Field(None, description="url")
-    

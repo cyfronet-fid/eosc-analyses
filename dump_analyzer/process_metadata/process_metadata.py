@@ -2,35 +2,32 @@ import os
 
 import pandas as pd
 import pyarrow.parquet as pq
+from tqdm import tqdm
 
-from missing_metadata import analyze_missing_values
-
-# TODO create .env file and piplock
-folder_path = '../../data/openaire/202308'
-exclude_columns = ['id', 'folder_name', 'file_name']
+from dump_analyzer.process_metadata.missing_metadata import analyze_missing_values, aggregate_missing_data
+from dump_analyzer.settings import settings
 
 
-combined_missing_df = pd.DataFrame()
+def process_metadata(folder_path):
+    """"""
+    combined_missing_df = pd.DataFrame()
 
-for file in os.listdir(folder_path):
-    if file.endswith('.parquet'):
-        print(f"processing {file}")
-        file_path = os.path.join(folder_path, file)
+    for directory in tqdm(os.listdir(folder_path), desc="Processing Directories"):
+        for file in tqdm(os.listdir(os.path.join(folder_path, directory)), desc=f"Processing Files in {directory}", leave=False):
+            if file.endswith(".parquet"):
+                file_path = os.path.join(folder_path, directory, file)
 
-        schema = pq.read_schema(file_path)
+                table = pq.read_table(file_path)
 
-        all_columns = schema.names
+                df = table.to_pandas()
 
-        columns_to_include = [col for col in all_columns if col not in exclude_columns]
+                missing_df = analyze_missing_values(df, file)
+                combined_missing_df = pd.concat(
+                    [combined_missing_df, missing_df], ignore_index=True, sort=False
+                )
 
-        table = pq.read_table(file_path, columns=columns_to_include)
+    aggregated_data = aggregate_missing_data(combined_missing_df)
 
-        df = table.to_pandas()
+    final_df = pd.concat([combined_missing_df, aggregated_data], ignore_index=True)
 
-        missing_df = analyze_missing_values(df, file)
-        combined_missing_df = pd.concat([combined_missing_df, missing_df], ignore_index=True, sort=False)
-        print(f"{file} ended")
-
-combined_missing_df.to_csv('missing_data.csv', index=False)
-
-
+    final_df.to_csv(os.path.join(settings.PROCESSED_METADATA_PATH, "missing_data.csv"), index=False)

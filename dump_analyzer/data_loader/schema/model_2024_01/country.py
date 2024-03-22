@@ -2,7 +2,7 @@ from typing import Optional
 
 from pydantic import BaseModel, Field
 
-from provenance import Provenance
+from dump_analyzer.data_loader.schema.model_2024_01.provenance import Provenance
 
 
 class Country(BaseModel):
@@ -10,5 +10,5 @@ class Country(BaseModel):
     label: Optional[str] = Field(None, description="The country label.")
     provenance: Optional[Provenance] = Field(
         None,
-        description="Indicates the reason why this country is associated to this result."
+        description="Indicates the reason why this country is associated to this result.",
     )

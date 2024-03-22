@@ -1,17 +1,11 @@
 from typing import Optional
 from pydantic import BaseModel, Field
-from provenance import Provenance
+from dump_analyzer.data_loader.schema.model_2024_01.provenance import Provenance
 
 
 class Reltype(BaseModel):
-    name: Optional[str] = Field(
-        None,
-        description="Name of the relation type."
-    )
-    type: Optional[str] = Field(
-        None,
-        description="Type of the relation."
-    )
+    name: Optional[str] = Field(None, description="Name of the relation type.")
+    type: Optional[str] = Field(None, description="Type of the relation.")
 
 
 class Relation(BaseModel):

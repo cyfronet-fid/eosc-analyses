@@ -1,8 +1,23 @@
-config.py
-__pycache__/
-playground.ipynb
-input/*
-output/*
+# System files
 .DS_Store
+
+# Python cache files
+__pycache__/
+
+# Virtual environment files
 Pipfile
 Pipfile.lock
+
+# Environment variables
+.env
+
+# Specific Python files
+config.py
+
+# Jupyter Notebooks
+playground.ipynb
+
+# Directories for input/output data
+input/*
+output/*
+data/*
