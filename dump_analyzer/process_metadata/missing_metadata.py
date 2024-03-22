@@ -1,5 +1,7 @@
 import pandas as pd
 
+from dump_analyzer.settings import settings
+
 
 def analyze_missing_values(df, file) -> pd.DataFrame:
     """
@@ -52,6 +54,7 @@ def analyze_missing_values(df, file) -> pd.DataFrame:
     missing_data_df = pd.DataFrame(
         {
             "file_name": file,
+            "yyyymm": settings.DUMP_YYYYMM,
             "column_name": column_names,
             "total_count": total_counts,
             "existing_count": existing_counts,
@@ -85,5 +88,6 @@ def aggregate_missing_data(missing_data_df: pd.DataFrame) -> pd.DataFrame:
     aggregated_data['missing_percentage'] = (aggregated_data['missing_count'] / aggregated_data['total_count']) * 100
 
     aggregated_data['file_name'] = 'aggregated'
+    aggregated_data['yyyymm'] = settings.DUMP_YYYYMM
 
     return aggregated_data

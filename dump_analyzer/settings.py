@@ -46,6 +46,8 @@ class Settings(BaseSettings):
     DATASET: str = "dataset"
     PUBLICATION: str = "publication"
 
+    DUMP_YYYYMM: str = "YYYYMM"
+
     NESTED_FIELDS_LIST: List = [
         AFFILIATION,
         AUTHOR,

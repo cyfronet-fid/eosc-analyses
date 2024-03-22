@@ -30,4 +30,4 @@ def process_metadata(folder_path):
 
     final_df = pd.concat([combined_missing_df, aggregated_data], ignore_index=True)
 
-    final_df.to_csv(os.path.join(settings.PROCESSED_METADATA_PATH, "missing_data.csv"), index=False)
+    final_df.to_csv(os.path.join(settings.PROCESSED_METADATA_PATH, f"missing_data_{settings.DUMP_YYYYMM}"), index=False)
