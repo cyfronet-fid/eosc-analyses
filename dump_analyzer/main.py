@@ -13,7 +13,6 @@ if __name__ == "__main__":
                 settings.COLLECTIONS[collection]["INPUT_PATH"], ResearchProduct
             )
             pbar.update(1)
-
         pbar.update(1)
 
     process_metadata(settings.METADATA_PATH)
